@@ -398,7 +398,7 @@ export default function VendorDocumentsPage() {
                 <Button
                   className="h-12 px-6 bg-green-600 hover:bg-green-700"
                   onClick={handleApprove}
-                  disabled={mutating || !canApprove || vendor.kycStatus === 'approved'}
+                  disabled={mutating || !canApprove}
                 >
                   <CheckCircle size={18} className="mr-2" />
                   Approve Vendor

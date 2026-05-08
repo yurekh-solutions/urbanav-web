@@ -18,17 +18,19 @@ import {
   Bell,
   Search,
   Building2,
+  ClipboardList,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { href: '/',           label: 'Dashboard',  Icon: LayoutDashboard },
-  { href: '/users',      label: 'Users',       Icon: Users },
-  { href: '/vendors',    label: 'Vendors',     Icon: Building2 },
-  { href: '/equipment',  label: 'Equipment',   Icon: Package },
-  { href: '/orders',     label: 'Orders',      Icon: ShoppingCart },
-  { href: '/inquiries',  label: 'Inquiries',   Icon: MessageSquare },
-  { href: '/analytics',  label: 'Analytics',   Icon: BarChart3 },
-  { href: '/settings',   label: 'Settings',    Icon: Settings },
+  { href: '/',             label: 'Dashboard',    Icon: LayoutDashboard },
+  { href: '/users',        label: 'Users',         Icon: Users },
+  { href: '/vendors',      label: 'Vendors',       Icon: Building2 },
+  { href: '/equipment',    label: 'Equipment',     Icon: Package },
+  { href: '/requirements', label: 'Requirements',  Icon: ClipboardList },
+  { href: '/orders',       label: 'Orders',        Icon: ShoppingCart },
+  { href: '/inquiries',    label: 'Inquiries',     Icon: MessageSquare },
+  { href: '/analytics',    label: 'Analytics',     Icon: BarChart3 },
+  { href: '/settings',     label: 'Settings',      Icon: Settings },
 ];
 
 export default function Sidebar() {

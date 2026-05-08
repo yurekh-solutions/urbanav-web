@@ -184,6 +184,31 @@ export interface InquiryListResponse {
   pageSize: number;
 }
 
+// ── Requirement types ─────────────────────────────────────────────────────
+export interface AdminRequirement {
+  _id: string;
+  buyer: { _id: string; name: string; email: string } | null;
+  eventType: string;
+  city: string;
+  address: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  items: string[];
+  budget: string;
+  notes: string;
+  status: 'open' | 'matched' | 'booked' | 'cancelled';
+  inquiryCount: number;
+  createdAt: string;
+}
+
+export interface RequirementListResponse {
+  data: AdminRequirement[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 // ── Vendor types ─────────────────────────────────────────────────────────
 export interface KycDocumentSlot {
   url: string;
@@ -306,6 +331,10 @@ export const adminApi = {
   // inquiries
   inquiries: (params?: QueryParams) =>
     request<InquiryListResponse>('/inquiries', { params }),
+
+  // requirements (buyer posts)
+  requirements: (params?: QueryParams) =>
+    request<RequirementListResponse>('/requirements', { params }),
 
   // vendors
   vendors: (params?: QueryParams) =>
