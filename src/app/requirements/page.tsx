@@ -10,6 +10,7 @@ import {
   Loader2,
   Search,
   X,
+  Tag,
 } from 'lucide-react';
 import { Card, Badge, Avatar } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
@@ -17,12 +18,14 @@ import {
   adminApi,
   type AdminRequirement,
   type RequirementListResponse,
+  type RequirementOffer,
 } from '@/lib/api';
 
-type StatusChip = 'all' | 'open' | 'matched' | 'booked' | 'cancelled';
+type StatusChip = 'all' | 'open' | 'offered' | 'matched' | 'booked' | 'cancelled';
 
 const STATUS_TONE: Record<string, 'success' | 'warning' | 'info' | 'error' | 'muted'> = {
   open: 'warning',
+  offered: 'info',
   matched: 'info',
   booked: 'success',
   cancelled: 'error',
@@ -36,6 +39,8 @@ export default function RequirementsPage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [selected, setSelected] = useState<AdminRequirement | null>(null);
+  const [offers, setOffers] = useState<RequirementOffer[]>([]);
+  const [offersLoading, setOffersLoading] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -63,6 +68,23 @@ export default function RequirementsPage() {
   }, [searchText]);
 
   const requirements = data?.data ?? [];
+
+  const openDetail = useCallback(async (r: AdminRequirement) => {
+    setSelected(r);
+    if ((r.offersCount ?? 0) > 0) {
+      setOffersLoading(true);
+      try {
+        const res = await adminApi.requirementOffers(r._id);
+        setOffers(res.offers ?? []);
+      } catch {
+        setOffers([]);
+      } finally {
+        setOffersLoading(false);
+      }
+    } else {
+      setOffers([]);
+    }
+  }, []);
 
   return (
     <div className="p-6 space-y-6 animate-fade-in-up">
@@ -100,7 +122,7 @@ export default function RequirementsPage() {
       </div>
 
       <div className="flex gap-2 flex-wrap">
-        {(['all', 'open', 'matched', 'booked', 'cancelled'] as const).map((s) => (
+        {(['all', 'open', 'offered', 'matched', 'booked', 'cancelled'] as const).map((s) => (
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
@@ -127,6 +149,7 @@ export default function RequirementsPage() {
                 <th className="text-left px-6 py-3 font-semibold hidden xl:table-cell">Date</th>
                 <th className="text-left px-6 py-3 font-semibold hidden lg:table-cell">Budget</th>
                 <th className="text-left px-6 py-3 font-semibold">Status</th>
+                <th className="text-left px-6 py-3 font-semibold hidden sm:table-cell">Offers</th>
                 <th className="text-left px-6 py-3 font-semibold hidden sm:table-cell">Inquiries</th>
                 <th className="text-right px-6 py-3 font-semibold">Actions</th>
               </tr>
@@ -134,14 +157,14 @@ export default function RequirementsPage() {
             <tbody className="divide-y divide-border/50">
               {loading && (
                 <tr>
-                  <td colSpan={9} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                  <td colSpan={10} className="px-6 py-12 text-center text-sm text-muted-foreground">
                     <Loader2 className="animate-spin inline mr-2" size={14} /> Loading requirements…
                   </td>
                 </tr>
               )}
               {!loading && err && (
                 <tr>
-                  <td colSpan={9} className="px-6 py-12 text-center text-sm text-red-500">{err}</td>
+                  <td colSpan={10} className="px-6 py-12 text-center text-sm text-red-500">{err}</td>
                 </tr>
               )}
               {!loading && !err && requirements.map((r) => (
@@ -179,13 +202,24 @@ export default function RequirementsPage() {
                       {r.status}
                     </Badge>
                   </td>
+                  <td className="px-6 py-3.5 hidden sm:table-cell">
+                    {(r.offersCount ?? 0) > 0 ? (
+                      <Badge tone="info">
+                        <span className="flex items-center gap-1">
+                          <Tag size={10} /> {r.offersCount} offer{r.offersCount !== 1 ? 's' : ''}
+                        </span>
+                      </Badge>
+                    ) : (
+                      <span className="text-sm text-muted-foreground">—</span>
+                    )}
+                  </td>
                   <td className="px-6 py-3.5 text-sm text-muted-foreground hidden sm:table-cell">
                     {r.inquiryCount}
                   </td>
                   <td className="px-6 py-3.5">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        onClick={() => setSelected(r)}
+                        onClick={() => openDetail(r)}
                         className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
                         title="View details"
                       >
@@ -197,7 +231,7 @@ export default function RequirementsPage() {
               ))}
               {!loading && !err && requirements.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                  <td colSpan={10} className="px-6 py-12 text-center text-sm text-muted-foreground">
                     No requirements posted yet.
                   </td>
                 </tr>
@@ -308,6 +342,60 @@ export default function RequirementsPage() {
                   {selected.inquiryCount} inquiries · {formatDate(selected.createdAt)}
                 </span>
               </div>
+
+              {/* Offers section */}
+              {(selected.offersCount ?? 0) > 0 && (
+                <div className="pt-3 border-t border-border">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
+                    <Tag size={12} /> Competitive Offers ({selected.offersCount})
+                  </div>
+                  {offersLoading ? (
+                    <div className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Loader2 className="animate-spin" size={12} /> Loading offers…
+                    </div>
+                  ) : offers.length > 0 ? (
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {offers.map((offer) => (
+                        <div
+                          key={offer._id}
+                          className={`p-2.5 rounded-lg border ${
+                            offer.isSelected
+                              ? 'border-primary/60 bg-primary/5'
+                              : 'border-border bg-secondary/30'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-foreground">
+                              {offer.supplier?.name ?? 'Unknown Supplier'}
+                            </span>
+                            <span className="text-sm font-bold text-primary">
+                              ₹{offer.offerPrice?.toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          {offer.offerNote && (
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                              {offer.offerNote}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-2 mt-1.5">
+                            <Badge tone={
+                              offer.isSelected ? 'success' :
+                              offer.status === 'offered' ? 'info' :
+                              offer.status === 'rejected' ? 'error' : 'muted'
+                            }>
+                              {offer.isSelected ? 'accepted' : offer.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      {selected.offersCount} offer{selected.offersCount !== 1 ? 's' : ''} received
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,13 +1,14 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
-import { MessageSquare, Eye, CheckCircle, Clock, XCircle, Loader2 } from 'lucide-react';
+import { MessageSquare, Eye, CheckCircle, Clock, XCircle, Loader2, DollarSign } from 'lucide-react';
 import { Card, Badge, Avatar } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
 import { adminApi, type AdminInquiry, type InquiryListResponse } from '@/lib/api';
 
-type StatusChip = 'all' | 'open' | 'responded' | 'accepted' | 'rejected';
+type StatusChip = 'all' | 'offered' | 'open' | 'responded' | 'accepted' | 'rejected';
 
 const STATUS_TONE: Record<string, 'success' | 'warning' | 'info' | 'error' | 'muted'> = {
+  offered: 'info',
   responded: 'info',
   open: 'warning',
   pending: 'warning',
@@ -19,6 +20,7 @@ const STATUS_TONE: Record<string, 'success' | 'warning' | 'info' | 'error' | 'mu
 const STATUS_ICON: Record<string, React.ReactNode> = {
   open:      <Clock size={11} />,
   pending:   <Clock size={11} />,
+  offered:   <DollarSign size={11} />,
   responded: <MessageSquare size={11} />,
   accepted:  <CheckCircle size={11} />,
   rejected:  <XCircle size={11} />,
@@ -60,7 +62,7 @@ export default function InquiriesPage() {
       </div>
 
       <div className="flex gap-2 flex-wrap">
-        {(['all', 'open', 'responded', 'accepted', 'rejected'] as const).map((s) => (
+        {(['all', 'offered', 'open', 'responded', 'accepted', 'rejected'] as const).map((s) => (
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
@@ -85,6 +87,7 @@ export default function InquiriesPage() {
                 <th className="text-left px-6 py-3 font-semibold hidden md:table-cell">Subject</th>
                 <th className="text-left px-6 py-3 font-semibold hidden lg:table-cell">Supplier</th>
                 <th className="text-left px-6 py-3 font-semibold">Status</th>
+                <th className="text-left px-6 py-3 font-semibold hidden md:table-cell">Offer Price</th>
                 <th className="text-left px-6 py-3 font-semibold hidden sm:table-cell">Msgs</th>
                 <th className="text-left px-6 py-3 font-semibold hidden lg:table-cell">Date</th>
                 <th className="text-right px-6 py-3 font-semibold">Actions</th>
@@ -93,14 +96,14 @@ export default function InquiriesPage() {
             <tbody className="divide-y divide-border/50">
               {loading && (
                 <tr>
-                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                  <td colSpan={9} className="px-6 py-12 text-center text-sm text-muted-foreground">
                     <Loader2 className="animate-spin inline mr-2" size={14} /> Loading inquiries…
                   </td>
                 </tr>
               )}
               {!loading && err && (
                 <tr>
-                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-red-500">{err}</td>
+                  <td colSpan={9} className="px-6 py-12 text-center text-sm text-red-500">{err}</td>
                 </tr>
               )}
               {!loading && !err && inquiries.map((inq: AdminInquiry) => (
@@ -129,6 +132,15 @@ export default function InquiriesPage() {
                       </span>
                     </Badge>
                   </td>
+                  <td className="px-6 py-3.5 text-sm hidden md:table-cell">
+                    {inq.offerPrice ? (
+                      <span className="font-semibold text-primary">
+                        ₹{inq.offerPrice.toLocaleString('en-IN')}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </td>
                   <td className="px-6 py-3.5 text-sm text-muted-foreground hidden sm:table-cell">
                     {inq.messageCount}
                   </td>
@@ -149,7 +161,7 @@ export default function InquiriesPage() {
               ))}
               {!loading && !err && inquiries.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-muted-foreground">
+                  <td colSpan={9} className="px-6 py-12 text-center text-sm text-muted-foreground">
                     No inquiries yet.
                   </td>
                 </tr>

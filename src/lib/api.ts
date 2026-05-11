@@ -174,6 +174,9 @@ export interface AdminInquiry {
   subject: string;
   status: string;
   messageCount: number;
+  offerPrice?: number;
+  offerNote?: string;
+  isSelected?: boolean;
   createdAt: string;
 }
 
@@ -197,8 +200,21 @@ export interface AdminRequirement {
   items: string[];
   budget: string;
   notes: string;
-  status: 'open' | 'matched' | 'booked' | 'cancelled';
+  status: 'open' | 'offered' | 'matched' | 'booked' | 'cancelled';
   inquiryCount: number;
+  offersCount?: number;
+  selectedInquiryId?: string;
+  selectedVendorId?: string;
+  createdAt: string;
+}
+
+export interface RequirementOffer {
+  _id: string;
+  supplier: { _id: string; name: string } | null;
+  offerPrice: number;
+  offerNote?: string;
+  status: string;
+  isSelected: boolean;
   createdAt: string;
 }
 
@@ -335,6 +351,8 @@ export const adminApi = {
   // requirements (buyer posts)
   requirements: (params?: QueryParams) =>
     request<RequirementListResponse>('/requirements', { params }),
+  requirementOffers: (requirementId: string) =>
+    request<{ offers: RequirementOffer[] }>(`/requirements/${requirementId}/offers`),
 
   // vendors
   vendors: (params?: QueryParams) =>
