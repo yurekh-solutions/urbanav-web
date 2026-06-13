@@ -199,6 +199,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-links {
+  position: absolute;
+  top: 50%;
+  right: 80px;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1370,6 +1374,7 @@ h1, h2, h3, h4, h5, h6 {
 
   /* Backdrop */
   .drawer-backdrop {
+    display: block;
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.55);
@@ -1386,6 +1391,12 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .menu-toggle { display: flex; }
+
+  /* Prevent navbar backdrop-filter from trapping fixed drawer */
+  .navbar.scrolled {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 
   /* Hamburger to X animation */
   .menu-toggle.open span:nth-child(1) {

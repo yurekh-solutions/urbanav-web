@@ -75,21 +75,23 @@
       <img src="urbanav-logo.jpg" alt="UrbanAV" onerror="this.style.display='none'">
       <span class="logo-text">Urban<span>AV</span></span>
     </a>
-    <div class="nav-links" id="navLinks">
-      <button class="drawer-close" onclick="toggleMenu()" aria-label="Close menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <a href="how-it-works-buyer.html">For Buyers</a>
-      <a href="how-it-works-supplier.html">For Suppliers</a>
-      <a href="privacy-policy-buyer.html">Privacy</a>
-      <a href="terms-buyer.html">Terms</a>
-      <a href="https://wa.me/919930670707" class="nav-cta">Get a Quote</a>
-    </div>
     <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </div>
   </div>
 </nav>
+
+<!-- Nav Links (moved outside navbar for proper stacking) -->
+<div class="nav-links" id="navLinks">
+  <button class="drawer-close" onclick="toggleMenu()" aria-label="Close menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <a href="how-it-works-buyer.html">For Buyers</a>
+  <a href="how-it-works-supplier.html">For Suppliers</a>
+  <a href="privacy-policy-buyer.html">Privacy</a>
+  <a href="terms-buyer.html">Terms</a>
+  <a href="https://wa.me/919930670707" class="nav-cta">Get a Quote</a>
+</div>
 
 <!-- Drawer Backdrop -->
 <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleMenu()"></div>
