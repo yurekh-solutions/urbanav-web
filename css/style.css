@@ -162,30 +162,52 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
   white-space: nowrap;
   letter-spacing: -0.01em;
+  position: relative;
 }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
 
+/* Neon pulse animation for primary buttons */
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.1); }
+  50% { box-shadow: 0 0 28px rgba(139, 92, 246, 0.55), 0 0 56px rgba(139, 92, 246, 0.2), inset 0 0 28px rgba(139, 92, 246, 0.15); }
+}
+@keyframes neonPulseAccent {
+  0%, 100% { box-shadow: 0 0 20px rgba(244, 63, 94, 0.35), 0 0 40px rgba(244, 63, 94, 0.12), inset 0 0 20px rgba(244, 63, 94, 0.08); }
+  50% { box-shadow: 0 0 28px rgba(244, 63, 94, 0.5), 0 0 56px rgba(244, 63, 94, 0.18), inset 0 0 28px rgba(244, 63, 94, 0.12); }
+}
+
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: rgba(139, 92, 246, 0.12);
   color: #fff;
-  box-shadow: 0 4px 20px var(--primary-glow);
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.1);
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  animation: neonPulse 3s ease-in-out infinite;
 }
 .btn-primary:hover {
-  box-shadow: 0 8px 32px var(--primary-glow);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.25), inset 0 0 30px rgba(139, 92, 246, 0.15);
+  border-color: var(--primary-light);
   transform: translateY(-3px);
+  animation: none;
 }
 
 .btn-glass {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(244, 63, 94, 0.08);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 2px solid var(--accent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.35), 0 0 40px rgba(244, 63, 94, 0.12), inset 0 0 20px rgba(244, 63, 94, 0.08);
+  text-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+  animation: neonPulseAccent 3s ease-in-out infinite;
 }
 .btn-glass:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(244, 63, 94, 0.15);
+  border-color: var(--accent-light);
+  box-shadow: 0 0 30px rgba(244, 63, 94, 0.5), 0 0 60px rgba(244, 63, 94, 0.2), inset 0 0 30px rgba(244, 63, 94, 0.12);
+  transform: translateY(-3px);
+  animation: none;
 }
 
 /* ===== NAVBAR ===== */
@@ -264,16 +286,21 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(155, 48, 255, 0.15);
 }
 .nav-cta {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+  background: rgba(139, 92, 246, 0.12) !important;
   color: #fff !important;
   font-weight: 600 !important;
   padding: 10px 22px !important;
-  box-shadow: 0 4px 20px var(--primary-glow) !important;
+  border: 2px solid var(--primary) !important;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.35), 0 0 32px rgba(139, 92, 246, 0.12), inset 0 0 16px rgba(139, 92, 246, 0.08) !important;
+  text-shadow: 0 0 8px rgba(139, 92, 246, 0.4) !important;
   margin-left: 8px;
+  animation: neonPulse 3s ease-in-out infinite;
 }
 .nav-cta:hover {
-  box-shadow: 0 6px 28px var(--primary-glow) !important;
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.5), 0 0 48px rgba(139, 92, 246, 0.2), inset 0 0 24px rgba(139, 92, 246, 0.12) !important;
+  border-color: var(--primary-light) !important;
   transform: translateY(-1px);
+  animation: none !important;
 }
 
 .menu-toggle {
@@ -476,23 +503,26 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   gap: 10px;
   padding: 18px 36px;
-  background: #fff;
-  color: var(--bg-primary);
+  background: rgba(139, 92, 246, 0.12);
+  color: #fff;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 1px;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--primary);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.35s var(--ease-out);
   white-space: nowrap;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.1);
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  animation: neonPulse 3s ease-in-out infinite;
 }
 .btn-hero-outline:hover {
-  background: var(--primary-light);
+  background: rgba(139, 92, 246, 0.2);
   border-color: var(--primary-light);
-  color: #fff;
   transform: translateY(-3px);
-  box-shadow: 0 10px 40px var(--primary-glow), 0 0 60px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.25), inset 0 0 30px rgba(139, 92, 246, 0.15);
+  animation: none;
 }
 
 /* Filled button - BECOME A SUPPLIER */
@@ -501,23 +531,26 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   padding: 18px 36px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: rgba(244, 63, 94, 0.08);
   color: #fff;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 1px;
-  border-radius: 8px;
-  border: 2px solid var(--primary);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--accent);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.35s var(--ease-out);
   white-space: nowrap;
-  box-shadow: 0 4px 20px var(--primary-glow);
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.35), 0 0 40px rgba(244, 63, 94, 0.12), inset 0 0 20px rgba(244, 63, 94, 0.08);
+  text-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+  animation: neonPulseAccent 3s ease-in-out infinite;
 }
 .btn-hero-filled:hover {
-  background: linear-gradient(135deg, var(--primary-dark), #4C1D95);
-  border-color: var(--primary-light);
+  background: rgba(244, 63, 94, 0.15);
+  border-color: var(--accent-light);
   transform: translateY(-3px);
-  box-shadow: 0 10px 40px var(--primary-glow), 0 0 80px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 30px rgba(244, 63, 94, 0.5), 0 0 60px rgba(244, 63, 94, 0.2), inset 0 0 30px rgba(244, 63, 94, 0.12);
+  animation: none;
 }
 
 /* ========== RESPONSIVE ========== */
